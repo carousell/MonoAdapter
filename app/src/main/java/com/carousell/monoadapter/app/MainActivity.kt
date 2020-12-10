@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun createAdapter() = MonoAdapter<AdapterSampleBinding, String>({
         AdapterSampleBinding.inflate(layoutInflater, it, false)
-    }, { binding, string ->
-        binding.text.text = string
+    }, { binding, data ->
+        binding.text.text = data
     })
 }

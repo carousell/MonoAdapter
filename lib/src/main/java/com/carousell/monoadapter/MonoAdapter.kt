@@ -20,17 +20,14 @@ class MonoAdapter<V : ViewBinding, T>(
     private val viewProvider: (ViewGroup) -> V,
     private val binder: (V, T) -> Unit,
     diffCheck: DiffUtil.ItemCallback<T> = replaceDiffCheck()
-) : ListAdapter<T, MonoAdapter.ViewHolder<V, T>>(diffCheck) {
+) : ListAdapter<T, MonoAdapter.ViewHolder<V>>(diffCheck) {
 
-    class ViewHolder<V : ViewBinding, T>(
-        val binding: V,
-    ) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder<V : ViewBinding>(val binding: V) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<V, T> {
-        return ViewHolder(viewProvider.invoke(parent))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ViewHolder(viewProvider.invoke(parent))
 
-    override fun onBindViewHolder(holder: ViewHolder<V, T>, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder<V>, position: Int) {
         binder.invoke(holder.binding, getItem(position))
     }
 }
