@@ -21,12 +21,12 @@ private fun <T> defaultDiffCheck() = object : DiffUtil.ItemCallback<T>() {
 
 class MonoAdapter<V : ViewBinding, T>(
     private val viewProvider: (ViewGroup) -> V,
-    private val binder: (V, T) -> Unit,
+    private val binder: V.(T) -> Unit,
     diffCheck: DiffUtil.ItemCallback<T> = defaultDiffCheck()
 ) : ListAdapter<T, MonoAdapter.ViewHolder<V>>(diffCheck) {
 
     companion object {
-        inline fun <reified V : ViewBinding, T> create(noinline binder: (V, T) -> Unit): MonoAdapter<V, T> {
+        inline fun <reified V : ViewBinding, T> create(noinline binder: V.(T) -> Unit): MonoAdapter<V, T> {
             return MonoAdapter({
                 val layoutInflater = LayoutInflater.from(it.context)
                 val method =
