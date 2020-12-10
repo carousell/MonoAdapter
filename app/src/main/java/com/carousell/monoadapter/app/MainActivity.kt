@@ -1,6 +1,7 @@
 package com.carousell.monoadapter.app
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.carousell.monoadapter.MonoAdapter
@@ -14,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val adapter = createAdapter()
+        val adapter = createNormalAdapter()
         binding.recyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerView.adapter = adapter
@@ -23,8 +24,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun getData() = MutableList(100) { index -> "#$index" }
 
-    private fun createAdapter() =
+    private fun createViewBindingAdapter() =
         MonoAdapter.create<AdapterSampleBinding, String> {
             text.text = it
+        }
+
+    private fun createNormalAdapter() =
+        MonoAdapter.create<String>(R.layout.adapter_sample) { view, string ->
+            view.findViewById<TextView>(R.id.text).text = string
         }
 }
