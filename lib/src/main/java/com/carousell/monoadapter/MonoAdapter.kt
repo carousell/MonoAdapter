@@ -23,19 +23,14 @@ class MonoAdapter<V : ViewBinding, T>(
 ) : ListAdapter<T, MonoAdapter.ViewHolder<V, T>>(diffCheck) {
 
     class ViewHolder<V : ViewBinding, T>(
-        private val viewBinding: V,
-        private val binder: (V, T) -> Unit
-    ) : RecyclerView.ViewHolder(viewBinding.root) {
-        fun bind(t: T) {
-            binder.invoke(viewBinding, t)
-        }
-    }
+        val binding: V,
+    ) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<V, T> {
-        return ViewHolder(viewProvider.invoke(parent), binder)
+        return ViewHolder(viewProvider.invoke(parent))
     }
 
     override fun onBindViewHolder(holder: ViewHolder<V, T>, position: Int) {
-        holder.bind(getItem(position))
+        binder.invoke(holder.binding, getItem(position))
     }
 }
