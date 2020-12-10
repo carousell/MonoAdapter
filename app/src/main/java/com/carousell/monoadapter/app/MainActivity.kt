@@ -23,9 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun getData() = MutableList(100) { index -> "#$index" }
 
-    private fun createAdapter() = MonoAdapter<AdapterSampleBinding, String>({
-        AdapterSampleBinding.inflate(layoutInflater, it, false)
-    }, { binding, data ->
-        binding.text.text = data
-    })
+    private fun createAdapter() =
+        MonoAdapter.create<AdapterSampleBinding, String> { binding, data ->
+            binding.text.text = data
+        }
 }
