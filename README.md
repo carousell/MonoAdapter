@@ -10,16 +10,27 @@ implementation 'com.github.carousell:MonoAdapter:1.0.0'
 ```
 
 ## Usage & Example
+1. With ViewBinding: You can easily declare the ViewBinding type and the data type, and then provide how to bind data with the binding object like below.
 
 ```kotlin
-MonoAdapter.create<AdapterMyDataBinding, MyData> {
+val adapter = MonoAdapter.create<AdapterMyDataBinding, MyData> {
     textView.text = it.text1
     button.setOnClickListener {
         textView.text = it.text2
     }
 }
 ```
+2. Without ViewBinding: ViewBinding is preferred but not necessary, you can pass the layout directly and then bind the View and data in the lambda like below example.
 
+```kotlin
+val adapter = MonoAdapter.create<MyData>(R.layout.adapter_sample) { view, data ->
+    val textView = view.findViewById<TextView>(R.id.text)
+    textView.text = data.text1
+    view.findViewById(R.id.button).setOnClickListener {
+        textView.text = data.text2
+    }
+}
+```
 Go to ./app module for more information.
 
 
