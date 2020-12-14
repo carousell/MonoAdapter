@@ -67,14 +67,19 @@ class MonoAdapter<V : ViewBinding, T>(
 
         inline fun <reified V : ViewBinding, T> create(noinline binder: V.(T) -> Unit): MonoAdapter<V, T> {
             return MonoAdapter({
-                val method =
+                try {
                     V::class.java.getMethod(
                         "inflate",
                         LayoutInflater::class.java,
                         ViewGroup::class.java,
                         Boolean::class.java
+                    ).invoke(null, LayoutInflater.from(it.context), it, false) as V
+                } catch (ex: NoSuchMethodException) {
+                    throw RuntimeException(
+                        "MonoAdapter rely on inflate function in ViewBinding which is changed now",
+                        ex
                     )
-                method.invoke(null, LayoutInflater.from(it.context), it, false) as V
+                }
             }, binder)
         }
 
@@ -83,15 +88,21 @@ class MonoAdapter<V : ViewBinding, T>(
             noinline binder: V.(T) -> Unit
         ): MonoAdapter<V, T> {
             return MonoAdapter({
-                val method =
+                try {
                     V::class.java.getMethod(
                         "inflate",
                         LayoutInflater::class.java,
                         ViewGroup::class.java,
                         Boolean::class.java
+                    ).invoke(null, LayoutInflater.from(it.context), it, false) as V
+                } catch (ex: NoSuchMethodException) {
+                    throw RuntimeException(
+                        "MonoAdapter rely on inflate function in ViewBinding which is changed now",
+                        ex
                     )
-                method.invoke(null, LayoutInflater.from(it.context), it, false) as V
+                }
             }, binder, diffCheck)
         }
+
     }
 }
