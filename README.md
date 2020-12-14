@@ -31,6 +31,9 @@ val adapter = MonoAdapter.create<MyData>(R.layout.adapter_sample) { view, data -
     }
 }
 ```
+
+p.s. You can also pass the `DiffUtil.ItemCallback` into each adapter create function to identify how to do the diff check for your data. MonoAdapter will otherwise compare the data as a whole if you didn't specified.
+
 Go to ./app module for more information.
 
 

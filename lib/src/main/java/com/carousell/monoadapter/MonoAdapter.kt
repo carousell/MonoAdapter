@@ -53,6 +53,18 @@ class MonoAdapter<V : ViewBinding, T>(
             })
         }
 
+        fun <T> create(
+            @LayoutRes layoutId: Int,
+            diffCheck: DiffUtil.ItemCallback<T>,
+            binder: (View, T) -> Unit
+        ): MonoAdapter<ViewBinding, T> {
+            return MonoAdapter({
+                BindingWrapper(LayoutInflater.from(it.context).inflate(layoutId, it, false))
+            }, {
+                binder.invoke(this.root, it)
+            }, diffCheck)
+        }
+
         inline fun <reified V : ViewBinding, T> create(noinline binder: V.(T) -> Unit): MonoAdapter<V, T> {
             return MonoAdapter({
                 val method =
@@ -64,6 +76,22 @@ class MonoAdapter<V : ViewBinding, T>(
                     )
                 method.invoke(null, LayoutInflater.from(it.context), it, false) as V
             }, binder)
+        }
+
+        inline fun <reified V : ViewBinding, T> create(
+            diffCheck: DiffUtil.ItemCallback<T>,
+            noinline binder: V.(T) -> Unit
+        ): MonoAdapter<V, T> {
+            return MonoAdapter({
+                val method =
+                    V::class.java.getMethod(
+                        "inflate",
+                        LayoutInflater::class.java,
+                        ViewGroup::class.java,
+                        Boolean::class.java
+                    )
+                method.invoke(null, LayoutInflater.from(it.context), it, false) as V
+            }, binder, diffCheck)
         }
     }
 }
