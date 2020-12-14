@@ -1,5 +1,9 @@
 # MonoAdapter
 
+[![CircleCI](https://circleci.com/gh/carousell/MonoAdapter.svg?style=shield)](https://circleci.com/gh/carousell/MonoAdapter)
+[![jitpack](https://jitpack.io/v/carousell/MonoAdapter.svg)](https://jitpack.io/#carousell/MonoAdapter)
+
+
 General Adapter for single ViewType cases.
 
 ## Install
