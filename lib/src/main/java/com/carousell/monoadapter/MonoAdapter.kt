@@ -33,11 +33,36 @@ class MonoAdapter<V : ViewBinding, T>(
 
     class ViewHolder<V : ViewBinding>(val binding: V) : RecyclerView.ViewHolder(binding.root)
 
+    var viewRecycledCallback: ((ViewHolder<V>) -> Unit)? = null
+    var viewAttachedToWindowCallback: ((ViewHolder<V>) -> Unit)? = null
+    var viewDetachedFromWindowCallback: ((ViewHolder<V>) -> Unit)? = null
+    var attachedToRecyclerViewCallback: ((RecyclerView) -> Unit)? = null
+    
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(viewProvider.invoke(parent))
 
     override fun onBindViewHolder(holder: ViewHolder<V>, position: Int) {
         binder.invoke(holder.binding, getItem(position))
+    }
+
+    override fun onViewRecycled(holder: ViewHolder<V>) {
+        super.onViewRecycled(holder)
+        viewRecycledCallback?.invoke(holder)
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        attachedToRecyclerViewCallback?.invoke(recyclerView)
+    }
+
+    override fun onViewAttachedToWindow(holder: ViewHolder<V>) {
+        super.onViewAttachedToWindow(holder)
+        viewAttachedToWindowCallback?.invoke(holder)
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder<V>) {
+        super.onViewDetachedFromWindow(holder)
+        viewDetachedFromWindowCallback?.invoke(holder)
     }
 
     companion object {
