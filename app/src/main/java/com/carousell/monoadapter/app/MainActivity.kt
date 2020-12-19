@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private fun getData() = MutableList(100) { index -> "#$index" }
 
     private fun createViewBindingAdapter() =
-        MonoAdapter.create<AdapterSampleBinding, String> {
+        MonoAdapter.create<AdapterSampleBinding, String>(AdapterSampleBinding::inflate) {
             text.text = it
         }
 

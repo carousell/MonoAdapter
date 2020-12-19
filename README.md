@@ -10,14 +10,14 @@ General Adapter for single ViewType cases.
 
 With setup of Jitpack first, than add dependency in your build.gradle
 ```groovy
-implementation 'com.github.carousell:MonoAdapter:1.0.0'
+implementation 'com.github.carousell:MonoAdapter:2.0.0'
 ```
 
 ## Usage & Example
 1. With ViewBinding: You can easily declare the ViewBinding type and the data type, and then provide how to bind data with the binding object like below.
 
 ```kotlin
-val adapter = MonoAdapter.create<AdapterMyDataBinding, MyData> {
+val adapter = MonoAdapter.create<AdapterMyDataBinding, MyData>(AdapterMyDataBinding::inflate) {
     textView.text = it.text1
     button.setOnClickListener {
         textView.text = it.text2
