@@ -37,7 +37,7 @@ class MonoAdapter<V : ViewBinding, T>(
     var viewAttachedToWindowCallback: ((ViewHolder<V>) -> Unit)? = null
     var viewDetachedFromWindowCallback: ((ViewHolder<V>) -> Unit)? = null
     var attachedToRecyclerViewCallback: ((RecyclerView) -> Unit)? = null
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(viewProvider.invoke(parent))
 
@@ -90,42 +90,22 @@ class MonoAdapter<V : ViewBinding, T>(
             }, diffCheck)
         }
 
-        inline fun <reified V : ViewBinding, T> create(noinline binder: V.(T) -> Unit): MonoAdapter<V, T> {
+        fun <V : ViewBinding, T> create(
+            bindingProvider: (LayoutInflater, ViewGroup?, Boolean) -> V,
+            binder: V.(T) -> Unit
+        ): MonoAdapter<V, T> {
             return MonoAdapter({
-                try {
-                    V::class.java.getMethod(
-                        "inflate",
-                        LayoutInflater::class.java,
-                        ViewGroup::class.java,
-                        Boolean::class.java
-                    ).invoke(null, LayoutInflater.from(it.context), it, false) as V
-                } catch (ex: NoSuchMethodException) {
-                    throw RuntimeException(
-                        "MonoAdapter rely on inflate function in ViewBinding which is changed now",
-                        ex
-                    )
-                }
+                bindingProvider.invoke(LayoutInflater.from(it.context), it, false)
             }, binder)
         }
 
-        inline fun <reified V : ViewBinding, T> create(
+        fun <V : ViewBinding, T> create(
+            bindingProvider: (LayoutInflater, ViewGroup?, Boolean) -> V,
             diffCheck: DiffUtil.ItemCallback<T>,
-            noinline binder: V.(T) -> Unit
+            binder: V.(T) -> Unit
         ): MonoAdapter<V, T> {
             return MonoAdapter({
-                try {
-                    V::class.java.getMethod(
-                        "inflate",
-                        LayoutInflater::class.java,
-                        ViewGroup::class.java,
-                        Boolean::class.java
-                    ).invoke(null, LayoutInflater.from(it.context), it, false) as V
-                } catch (ex: NoSuchMethodException) {
-                    throw RuntimeException(
-                        "MonoAdapter rely on inflate function in ViewBinding which is changed now",
-                        ex
-                    )
-                }
+                bindingProvider.invoke(LayoutInflater.from(it.context), it, false)
             }, binder, diffCheck)
         }
 
